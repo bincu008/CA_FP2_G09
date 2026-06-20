@@ -1,0 +1,61 @@
+# === Layer 0: Column Split ===
+DRAM,READ,TOKEN_I,0,0,737,93
+ARRAY,IS,model.0.weight,2,1,93,1093
+DMA,1,0,2,0,1093
+DRAM,READ,MODEL,model.0.bias,3,0,2,1,1093
+VECTOR,4,1093
+DMA,4,0,2,0,1093
+VECTOR,3,1093
+DMA,4,0,0,0,1093
+
+# === Layer 1: Row Split + Reduce Scatter ===
+ARRAY,IS,model.2.weight,2,1,1093,1098
+DMA,1,549,2,0,549
+NoC,1,0,0,1,3,0,549
+NoC,IN
+VECTOR,4,549
+DMA,4,0,2,0,549
+DRAM,READ,MODEL,model.2.bias,3,0,2,1,549
+VECTOR,4,549
+DMA,4,0,2,0,549
+VECTOR,3,549
+DMA,4,0,0,0,549
+
+# === Layer 2: Row Split + Reduce Scatter ===
+ARRAY,IS,model.4.weight,2,1,549,1327
+DMA,1,664,2,0,663
+NoC,1,0,0,1,3,0,664
+NoC,IN
+VECTOR,4,663
+DMA,4,0,2,0,663
+DRAM,READ,MODEL,model.4.bias,3,0,2,1,663
+VECTOR,4,663
+DMA,4,0,2,0,663
+VECTOR,3,663
+DMA,4,0,0,0,663
+
+# === Layer 3: Row Split + Reduce Scatter ===
+ARRAY,IS,model.6.weight,2,1,663,384
+DMA,1,192,2,0,192
+NoC,1,0,0,1,3,0,192
+NoC,IN
+VECTOR,4,192
+DMA,4,0,2,0,192
+DRAM,READ,MODEL,model.6.bias,3,0,2,1,192
+VECTOR,4,192
+DMA,4,0,2,0,192
+VECTOR,3,192
+DMA,4,0,0,0,192
+
+# === Layer 4: Row Split + Reduce Scatter ===
+ARRAY,IS,model.8.weight,2,1,192,10
+DMA,1,5,2,0,5
+NoC,1,0,0,1,3,0,5
+NoC,IN
+VECTOR,4,5
+DMA,4,0,2,0,5
+DRAM,READ,MODEL,model.8.bias,3,0,2,1,5
+VECTOR,4,5
+
+# === Gather to Core 8 for Softmax ===
+NoC,4,0,0,1,2,5,5

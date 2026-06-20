@@ -1,0 +1,48 @@
+# === Layer 0: Column Split ===
+DRAM,READ,TOKEN_I,0,0,440,297
+ARRAY,IS,model.0.weight,1,1,297,1487
+DMA,1,0,2,0,1487
+DRAM,READ,MODEL,model.0.bias,3,0,1,1,1487
+VECTOR,4,1487
+DMA,4,0,2,0,1487
+VECTOR,3,1487
+DMA,4,0,0,0,1487
+
+# === Layer 1: Row Split + Reduce Scatter ===
+ARRAY,IS,model.2.weight,1,1,1487,793
+DMA,1,397,2,0,396
+NoC,1,0,6,0,3,0,397
+NoC,IN
+VECTOR,4,396
+DMA,4,0,2,0,396
+DRAM,READ,MODEL,model.2.bias,3,0,1,1,396
+VECTOR,4,396
+DMA,4,0,2,0,396
+VECTOR,3,396
+DMA,4,0,0,0,396
+
+# === Layer 2: Row Split + Reduce Scatter ===
+ARRAY,IS,model.4.weight,1,1,396,372
+DMA,1,186,2,0,186
+NoC,1,0,6,0,3,0,186
+NoC,IN
+VECTOR,4,186
+DMA,4,0,2,0,186
+DRAM,READ,MODEL,model.4.bias,3,0,1,1,186
+VECTOR,4,186
+DMA,4,0,2,0,186
+VECTOR,3,186
+DMA,4,0,0,0,186
+
+# === Layer 3: Row Split + Reduce Scatter ===
+ARRAY,IS,model.6.weight,1,1,186,13
+DMA,1,7,2,0,6
+NoC,1,0,6,0,3,0,7
+NoC,IN
+VECTOR,4,6
+DMA,4,0,2,0,6
+DRAM,READ,MODEL,model.6.bias,3,0,1,1,6
+VECTOR,4,6
+
+# === Gather to Core 6 for Softmax ===
+NoC,4,0,6,0,2,7,6

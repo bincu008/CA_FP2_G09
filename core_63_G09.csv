@@ -1,0 +1,20 @@
+# === Layer 0: Column Split ===
+DRAM,READ,TOKEN_I,0,0,2425,374
+ARRAY,IS,model.0.weight,9,0,374,825
+DMA,1,0,2,0,825
+DRAM,READ,MODEL,model.0.bias,3,0,9,0,825
+VECTOR,4,825
+DMA,4,0,2,0,825
+VECTOR,3,825
+DMA,4,0,0,0,825
+
+# === Layer 1: Row Split + Reduce Scatter ===
+ARRAY,IS,model.2.weight,9,0,825,15
+DMA,1,0,2,0,15
+DRAM,READ,MODEL,model.2.bias,3,0,9,0,15
+VECTOR,4,15
+
+# === Gather to Core 63 for Softmax ===
+DMA,4,0,2,0,15
+VECTOR,2,15
+DRAM,WRITE,TOKEN_O,4,0,107,15
